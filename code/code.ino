@@ -3,7 +3,7 @@
 TFA433 tfa = TFA433(); //Input pin where 433 receiver is connected.
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   tfa.start(2);
 }
 
