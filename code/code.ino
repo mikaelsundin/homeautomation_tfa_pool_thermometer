@@ -15,7 +15,7 @@ void loop() {
 	tfaResult result = tfa.getData();
 
     //output as json
-	sprintf(txt, "{\"id\": %d, \"channel\": %d, \"temperature\": %d.%d}\n", result.id, result.channel, result.temperature / 10, result.temperature % 10);
+	sprintf(txt, "{\"type\":\"TFA_30.3240.10\", \"id\": %d, \"channel\": %d, \"temperature\": %d.%d}\n", result.id, result.channel, result.temperature / 10, result.temperature % 10);
 	Serial.print(txt);
   }
 }
