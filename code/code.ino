@@ -1,21 +1,36 @@
+#include <ArduinoJson.h>
+#include <ArduinoJson.hpp>
 #include "tfa433.h"
+
+#define PIN_RFINPUT  2
 
 TFA433 tfa = TFA433(); //Input pin where 433 receiver is connected.
 
+StaticJsonDocument<200> doc; 
+
+
 void setup() {
-  Serial.begin(9600);
-  tfa.start(2);
+  Serial.begin(115200);
+  tfa.start(PIN_RFINPUT);
 }
 
 void loop() {
-  if (tfa.isDataAvailable()) {
-	char txt[100];
+  if (tfa.isDataAvailable()) {    
+    char id[100];
 
-    
-	tfaResult result = tfa.getData();
+    tfaResult result = tfa.getData();
 
-    //output as json
-	sprintf(txt, "{\"type\":\"TFA_30.3240.10\", \"id\": %d, \"channel\": %d, \"temperature\": %d.%d}\n", result.id, result.channel, result.temperature / 10, result.temperature % 10);
-	Serial.print(txt);
+    //generate json data.
+    doc.clear();
+    doc["manufacture"] = F("tfa");
+    doc["model"] = F("30.3240.10");
+
+    doc["id"] = (result.id * 10) + result.channel; 
+    doc["temperature"] = ((float)result.temperature / 10.0f) ;
+
+    //output json via serial
+    serializeJson(doc, Serial);
+    Serial.println();
   }
 }
+
